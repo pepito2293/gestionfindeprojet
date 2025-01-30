@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Créations Dupdup - Générateur de cartes Dobble</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <script src="scripts/script.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+  
+
+
+</head>
+<body>
+  <!-- Menu hamburger -->
+  <nav class="hamburger-menu">
+    <input type="checkbox" id="menu-toggle">
+    <label for="menu-toggle" class="menu-icon">
+      ☰
+    </label>
+    <ul class="menu-items">
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="emoji-customization.html">Personnaliser les émojis</a></li>
+    </ul>
+  </nav>
+
+  <!-- Contenu principal -->
+  <header>
+    <img src="isla_200x200.74417624_o08o07y0.jpg" alt="Logo Créations Dupdup" class="logo">
+    <h1>Générateur de cartes personnalisées</h1>
+    <div class="wave"></div>
+  </header>
+
+  <main>
+    <div class="actions">
+      <button onclick="generateCards()">Générer des cartes</button>
+      <button onclick="downloadCardsAsPDF()">Télécharger en PDF</button>
+      <button onclick="exportCardsAsZip()">Télécharger les cartes en PNG (ZIP)</button>
+</div>
+
+    </div>
+
+    <div class="slider-container">
+      <div class="slider-label">
+        <label for="minSize">Taille minimale des émojis :</label>
+        <span id="minSizeValue">30</span> px
+      </div>
+      <input type="range" id="minSize" min="10" max="70" value="30" oninput="updatePreview()">
+      <div class="slider-label">
+        <label for="maxSize">Taille maximale des émojis :</label>
+        <span id="maxSizeValue">70</span> px
+      </div>
+      <input type="range" id="maxSize" min="40" max="120" value="70" oninput="updatePreview()">
+    </div>
+
+    <div class="card-container-wrapper">
+      <div class="card-container" id="cardContainer"></div>
+    </div>
+    <div class="actions">
+</div>
+
+  </main>
+
+
+  <footer>
+    <p>&copy; 2025 Créations Dupdup</p>
+  </footer>
+  <nav class="hamburger-menu">
+  <input type="checkbox" id="menu-toggle">
+  <label for="menu-toggle" class="menu-icon">
+    ☰
+  </label>
+  <ul class="menu-items">
+    <li><a href="index.html">Accueil</a></li>
+    <li><a href="emoji-customization.html">Personnaliser les émojis</a></li>
+  </ul>
+</nav>
+
+</body>
+</html>
