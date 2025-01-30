@@ -249,6 +249,12 @@ async function downloadCardsAsPDF() {
         alert("Une erreur est survenue lors du téléchargement du PDF.");
     }
 }
+// Charger l'image du dos de carte si elle est stockée
+window.addEventListener("load", () => {
+    if (localStorage.getItem("backCardImage")) {
+        backCardImage = localStorage.getItem("backCardImage");
+    }
+});
 
 
             // Ajoute l'image de la carte au bon emplacement
@@ -418,13 +424,6 @@ document.getElementById("backCardUpload").addEventListener("change", (event) => 
             localStorage.setItem("backCardImage", backCardImage); // Sauvegarde pour persistance
         };
         reader.readAsDataURL(file);
-    }
-});
-
-// Charger l'image du dos de carte si elle est stockée
-window.addEventListener("load", () => {
-    if (localStorage.getItem("backCardImage")) {
-        backCardImage = localStorage.getItem("backCardImage");
     }
 });
 
