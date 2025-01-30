@@ -105,32 +105,34 @@ input[type="range"] {
 
 /* Style pour les inputs de type fichier */
 #emojiTable input[type="file"] {
-    padding: 10px 20px !important;
-    background-color: #ffd700 !important;
-    color: #000 !important;
-    border: none !important;
-    border-radius: 5px !important;
-    cursor: pointer !important;
-    appearance: none;
-    -webkit-appearance: none;
+    padding: 10px 20px !important; /* Ajoute un padding pour augmenter la taille */
+    background-color: #ffd700 !important; /* Fond jaune */
+    color: #000 !important; /* Texte noir */
+    border: none !important; /* Supprime la bordure */
+    border-radius: 5px !important; /* Coins arrondis */
+    cursor: pointer !important; /* Curseur pointer au survol */
+    appearance: none; /* Supprime le style par défaut des navigateurs */
+    -webkit-appearance: none; /* Pour Safari */
 }
 
 #emojiTable input[type="file"]:hover {
-    background-color: #e6c200 !important;
+    background-color: #e6c200 !important; /* Change le fond en jaune plus foncé */
 }
 
 #emojiTable button {
-    padding: 10px 20px !important;
-    background-color: #ffd700 !important;
-    color: #000 !important;
-    border: none !important;
-    border-radius: 5px !important;
-    cursor: pointer !important;
+    padding: 10px 20px !important; /* Taille du bouton */
+    background-color: #ffd700 !important; /* Fond jaune */
+    color: #000 !important; /* Texte noir */
+    border: none !important; /* Supprime la bordure */
+    border-radius: 5px !important; /* Coins arrondis */
+    cursor: pointer !important; /* Curseur pointer */
 }
 
+
 #emojiTable button:hover {
-    background-color: #e6c200 !important;
+    background-color: #e6c200 !important; /* Change le fond en jaune plus foncé */
 }
+
 
 /* --- Grille des cartes --- */
 .card-container-wrapper {
