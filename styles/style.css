@@ -119,18 +119,26 @@ input[type="range"] {
     background-color: #e6c200 !important; /* Change le fond en jaune plus foncé */
 }
 
-#emojiTable button {
-    padding: 10px 20px !important; /* Taille du bouton */
-    background-color: #ffd700 !important; /* Fond jaune */
-    color: #000 !important; /* Texte noir */
-    border: none !important; /* Supprime la bordure */
-    border-radius: 5px !important; /* Coins arrondis */
-    cursor: pointer !important; /* Curseur pointer */
+/* Style des boutons "Choisir un fichier" et "Réinitialiser" */
+.bouton-style, #emojiTable button {
+    padding: 10px 20px;
+    background-color: #ffd700; /* Jaune */
+    color: #000; /* Texte noir */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s, transform 0.2s;
 }
 
-
-#emojiTable button:hover {
-    background-color: #e6c200 !important; /* Change le fond en jaune plus foncé */
+/* Effet au survol */
+.bouton-style:hover, #emojiTable button:hover {
+    background-color: #e6c200; /* Jaune foncé */
+    transform: scale(1.05); /* Animation légère */
 }
 
 
