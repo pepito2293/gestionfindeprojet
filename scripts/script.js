@@ -260,7 +260,7 @@ window.addEventListener("load", () => {
             // Ajoute l'image de la carte au bon emplacement
             pdf.addImage(imgData, "PNG", x, y, cardSize, cardSize);
             currentCardIndex++;
-        }
+      
 
         pdf.save("dobble_cards.pdf");
         alert("Le PDF a été téléchargé avec succès !");
