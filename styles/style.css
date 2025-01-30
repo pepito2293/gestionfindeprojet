@@ -326,3 +326,19 @@ footer p {
     background-color: #cc0000; /* Rouge plus foncé */
     transform: scale(1.05);
 }
+
+
+/* Dos des cartes */
+.upload-back-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#backCardPreview {
+    display: block;
+    margin: 10px auto;
+    max-width: 100px;
+    max-height: 100px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+}
