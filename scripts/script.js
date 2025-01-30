@@ -191,7 +191,7 @@ document.getElementById("backCardUpload").addEventListener("change", (event) => 
 });
 // Fonction pour télécharger les cartes en PDF
 async function downloadCardsAsPDF() {
-  console.log("📥 Chargement de backCardImage :", localStorage.getItem("backCardImage"));
+ 
     try {
         const cardContainer = document.getElementById("cardContainer");
         const cards = cardContainer.querySelectorAll(".card");
@@ -200,7 +200,8 @@ async function downloadCardsAsPDF() {
             alert("Aucune carte à télécharger. Veuillez d'abord générer les cartes.");
             return;
         }
-
+console.log("📥 Chargement de backCardImage :", localStorage.getItem("backCardImage"));
+console.log("🖼 Ajout de l'image de dos dans le PDF :", backCardImage);
         if (!backCardImage) {
             alert("Veuillez ajouter une image pour le dos des cartes.");
             return;
