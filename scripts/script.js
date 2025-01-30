@@ -444,3 +444,43 @@ window.addEventListener("load", () => {
         document.getElementById("backCardPreview").style.display = "block";
     }
 });
+
+
+//Ajout d'un coup:
+
+document.getElementById("multiFileUpload").addEventListener("change", async (event) => {
+    const files = event.target.files;
+
+    if (files.length === 0) {
+        alert("❌ Aucun fichier sélectionné !");
+        return;
+    }
+
+    if (files.length !== 57) {
+        alert("⚠️ Vous devez importer exactement 57 images.");
+        return;
+    }
+
+    console.log(`📥 Importation de ${files.length} images...`);
+
+    let newEmojiList = [];
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+
+        reader.onload = ((index) => (e) => {
+            newEmojiList[index] = e.target.result;
+
+            // Vérifie si toutes les images sont chargées
+            if (newEmojiList.length === 57 && !newEmojiList.includes(undefined)) {
+                emojiList = newEmojiList;
+                saveEmojiList();
+                populateEmojiTable();
+                generateCards();
+                alert("✅ Les 57 images ont été importées avec succès !");
+            }
+        })(i);
+
+        reader.readAsDataURL(file);
+    }
+});
