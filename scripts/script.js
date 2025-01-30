@@ -456,28 +456,31 @@ document.getElementById("multiFileUpload").addEventListener("change", async (eve
         return;
     }
 
-    if (files.length !== 57) {
-        alert("⚠️ Vous devez importer exactement 57 images.");
+    if (files.length > 57) {
+        alert("⚠️ Vous ne pouvez pas importer plus de 57 images.");
         return;
     }
 
     console.log(`📥 Importation de ${files.length} images...`);
 
-    let newEmojiList = [];
+    let newEmojiList = [...emojiList]; // Copie la liste actuelle
+    let loadedImages = 0;
+
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const reader = new FileReader();
 
         reader.onload = ((index) => (e) => {
-            newEmojiList[index] = e.target.result;
+            newEmojiList[index] = e.target.result; // Remplace l'émoji existant par l'image importée
+            loadedImages++;
 
             // Vérifie si toutes les images sont chargées
-            if (newEmojiList.length === 57 && !newEmojiList.includes(undefined)) {
-                emojiList = newEmojiList;
+            if (loadedImages === files.length) {
+                emojiList = newEmojiList; // Met à jour la liste globale
                 saveEmojiList();
                 populateEmojiTable();
                 generateCards();
-                alert("✅ Les 57 images ont été importées avec succès !");
+                alert(`✅ ${files.length} image(s) ont été importées avec succès !`);
             }
         })(i);
 
