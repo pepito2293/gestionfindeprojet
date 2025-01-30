@@ -185,53 +185,67 @@ async function downloadCardsAsPDF() {
             return;
         }
 
+        if (!backCardImage) {
+            alert("Veuillez ajouter une image pour le dos des cartes.");
+            return;
+        }
+
         const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF("portrait", "mm", "a4"); // Format A4 vertical
+        const pdf = new jsPDF("portrait", "mm", "a4");
 
         const pageWidth = pdf.internal.pageSize.getWidth();
         const pageHeight = pdf.internal.pageSize.getHeight();
 
-        const cardSize = 85.53; // Taille exacte de la carte en mm
-        const spaceBetween = 5; // Espacement précis entre les cartes
-        const maxCardsPerRow = 2; // 2 cartes par ligne
-        const maxCardsPerCol = 3; // 3 cartes par colonne
+        const cardSize = 85.53;
+        const spaceBetween = 5;
+        const maxCardsPerRow = 2;
+        const maxCardsPerCol = 3;
         const totalCardsPerPage = maxCardsPerRow * maxCardsPerCol;
 
-        // Calcul de la disposition exacte sur la page A4
         const totalWidth = maxCardsPerRow * cardSize + (maxCardsPerRow - 1) * spaceBetween;
         const totalHeight = maxCardsPerCol * cardSize + (maxCardsPerCol - 1) * spaceBetween;
 
-        // Coordonnées pour centrer parfaitement les cartes sur la page
         const startX = (pageWidth - totalWidth) / 2;
         const startY = (pageHeight - totalHeight) / 2;
 
         let currentCardIndex = 0;
+        let pages = [];
 
         for (let i = 0; i < cards.length; i++) {
             const canvas = await html2canvas(cards[i], { scale: 2 });
             const imgData = canvas.toDataURL("image/png");
 
-            // Calcul des positions pour un alignement exact
             const row = Math.floor(currentCardIndex / maxCardsPerRow) % maxCardsPerCol;
             const col = currentCardIndex % maxCardsPerRow;
             const x = startX + col * (cardSize + spaceBetween);
             const y = startY + row * (cardSize + spaceBetween);
 
-            // Ajoute une nouvelle page lorsque nécessaire
-            if (currentCardIndex % totalCardsPerPage === 0 && currentCardIndex > 0) {
-                pdf.addPage();
+            if (!pages[Math.floor(currentCardIndex / totalCardsPerPage)]) {
+                pages[Math.floor(currentCardIndex / totalCardsPerPage)] = [];
             }
 
-            // Ajoute l'image de la carte au bon emplacement
-            pdf.addImage(imgData, "PNG", x, y, cardSize, cardSize);
+            pages[Math.floor(currentCardIndex / totalCardsPerPage)].push({ imgData, x, y });
+
             currentCardIndex++;
         }
 
+        pages.forEach((page, pageIndex) => {
+            if (pageIndex > 0) pdf.addPage();
+            page.forEach(({ imgData, x, y }) => {
+                pdf.addImage(imgData, "PNG", x, y, cardSize, cardSize);
+            });
+
+            pdf.addPage();
+            page.forEach(({ x, y }) => {
+                pdf.addImage(backCardImage, "PNG", x, y, cardSize, cardSize);
+            });
+        });
+
         pdf.save("dobble_cards.pdf");
-        alert("Le PDF a été téléchargé avec succès !");
+        alert("Le PDF avec recto-verso a été généré !");
     } catch (error) {
         console.error("Erreur lors du téléchargement du PDF :", error);
-        alert("Une erreur est survenue lors du téléchargement du PDF. Veuillez réessayer.");
+        alert("Une erreur est survenue lors du téléchargement du PDF.");
     }
 }
 
@@ -375,5 +389,31 @@ document.getElementById("resetAll").addEventListener("click", () => {
         saveEmojiList();  // Sauvegarde la nouvelle liste dans localStorage
         populateEmojiTable();  // Met à jour le tableau
         generateCards();  // Re-génère les cartes Dobble
+    }
+});
+
+
+let backCardImage = null; // Stocke l'image du dos des cartes
+
+document.getElementById("backCardUpload").addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            backCardImage = e.target.result; // Stocke l'image en base64
+            localStorage.setItem("backCardImage", backCardImage); // Sauvegarde dans le localStorage
+            document.getElementById("backCardPreview").src = backCardImage;
+            document.getElementById("backCardPreview").style.display = "block";
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Charger l'image du dos de carte au démarrage si elle est stockée
+window.addEventListener("load", () => {
+    if (localStorage.getItem("backCardImage")) {
+        backCardImage = localStorage.getItem("backCardImage");
+        document.getElementById("backCardPreview").src = backCardImage;
+        document.getElementById("backCardPreview").style.display = "block";
     }
 });
