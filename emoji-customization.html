@@ -28,6 +28,13 @@
             <button id="resetAll">Tout réinitialiser</button>
         </div>
 
+        <!-- Dos des cartes -->
+        <div class="upload-back-container">
+    <label for="backCardUpload" class="bouton-style">Choisir un dos de carte</label>
+    <input type="file" id="backCardUpload" accept="image/*" style="display: none;">
+    <img id="backCardPreview" src="" alt="Aperçu du dos" style="display:none; max-width:100px; margin-top:10px;">
+</div>
+
         <!-- Tableau des émojis -->
         <table id="emojiTable">
             <thead>
@@ -47,11 +54,7 @@
             <div class="card-container" id="cardContainer"></div>
         </div>
         
-        <div class="upload-back-container">
-    <label for="backCardUpload" class="bouton-style">Choisir un dos de carte</label>
-    <input type="file" id="backCardUpload" accept="image/*" style="display: none;">
-</div>
-
+    
     </main>
 
     <footer>
