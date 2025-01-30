@@ -190,24 +190,25 @@ document.getElementById("backCardUpload").addEventListener("change", (event) => 
     }
 });
 // Fonction pour télécharger les cartes en PDF
-async function downloadCardsAsPDF() {
-    try {
-        console.log("📥 Début de la génération du PDF...");
+let pdfBlob = null; // Stocke le PDF temporairement pour l'aperçu
 
-        // 🔄 Recharger l'image du dos des cartes si elle existe dans localStorage
+async function generatePDFPreview() {
+    try {
+        console.log("📥 Début de la génération de l'aperçu du PDF...");
+
+        // Recharger l'image du dos des cartes
         backCardImage = localStorage.getItem("backCardImage") || null;
         console.log("🔄 backCardImage rechargé :", backCardImage);
 
-        // Vérification de la présence des cartes
+        // Vérification
         const cardContainer = document.getElementById("cardContainer");
         const cards = cardContainer.querySelectorAll(".card");
 
         if (cards.length === 0) {
-            alert("Aucune carte à télécharger. Veuillez d'abord générer les cartes.");
+            alert("Aucune carte à prévisualiser. Veuillez générer les cartes.");
             return;
         }
 
-        // Vérification de la présence du dos des cartes
         if (!backCardImage) {
             alert("Veuillez ajouter une image pour le dos des cartes.");
             return;
@@ -215,15 +216,14 @@ async function downloadCardsAsPDF() {
 
         console.log("✅ Toutes les vérifications sont OK !");
 
-        // 📄 Initialisation du PDF
+        // 📄 Création du PDF
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF("portrait", "mm", "a4");
 
         const pageWidth = pdf.internal.pageSize.getWidth();
         const pageHeight = pdf.internal.pageSize.getHeight();
 
-        // 📏 Configuration des cartes sur le PDF
-        const cardSize = 85.53; // Taille standard pour aligner les cartes
+        const cardSize = 85.53;
         const spaceBetween = 5;
         const maxCardsPerRow = 2;
         const maxCardsPerCol = 3;
@@ -238,10 +238,8 @@ async function downloadCardsAsPDF() {
         let currentCardIndex = 0;
         let pages = [];
 
-        // 📸 Capture des cartes recto
-        console.log("📸 Capture des cartes...");
+        // 📸 Capture des cartes
         for (let i = 0; i < cards.length; i++) {
-            console.log(`📷 Capture de la carte ${i + 1}...`);
             const canvas = await html2canvas(cards[i], { scale: 2 });
             const imgData = canvas.toDataURL("image/png");
 
@@ -259,11 +257,8 @@ async function downloadCardsAsPDF() {
             currentCardIndex++;
         }
 
-        console.log("✅ Toutes les cartes ont été capturées !");
-
-        // 📄 Génération des pages du PDF avec recto-verso aligné
+        // 📄 Génération du PDF
         pages.forEach((page, pageIndex) => {
-            console.log(`🖨️ Ajout de la page ${pageIndex + 1} (recto)...`);
             if (pageIndex > 0) pdf.addPage();
             
             // Ajout des cartes (recto)
@@ -271,21 +266,41 @@ async function downloadCardsAsPDF() {
                 pdf.addImage(imgData, "PNG", x, y, cardSize, cardSize);
             });
 
-            // Ajout du verso sur une nouvelle page
-            console.log(`🔄 Ajout du verso des cartes sur la page ${pageIndex + 2}...`);
+            // Ajout du verso
             pdf.addPage();
             page.forEach(({ x, y }) => {
                 pdf.addImage(backCardImage, "PNG", x, y, cardSize, cardSize);
             });
         });
 
-        // 📥 Téléchargement du PDF
-        pdf.save("dobble_cards.pdf");
-        alert("✅ Le PDF avec recto-verso a été généré avec succès !");
+        // 📥 Stocker le PDF en mémoire et afficher l'aperçu
+        pdfBlob = pdf.output("blob"); // Stocke le PDF sous forme de Blob
+        const pdfURL = URL.createObjectURL(pdfBlob);
+
+        document.getElementById("pdfPreview").src = pdfURL;
+        document.getElementById("pdfPreviewContainer").style.display = "block";
+
+        console.log("✅ Aperçu du PDF généré !");
     } catch (error) {
-        console.error("❌ Erreur lors du téléchargement du PDF :", error);
-        alert("Une erreur est survenue lors du téléchargement du PDF.");
+        console.error("❌ Erreur lors de la génération de l'aperçu du PDF :", error);
+        alert("Une erreur est survenue lors de la génération de l'aperçu.");
     }
+}
+
+function downloadFinalPDF() {
+    if (!pdfBlob) {
+        alert("Veuillez d'abord générer un aperçu du PDF.");
+        return;
+    }
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(pdfBlob);
+    link.download = "dobble_cards.pdf";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    alert("📥 Le PDF a été téléchargé avec succès !");
 }
 
 
