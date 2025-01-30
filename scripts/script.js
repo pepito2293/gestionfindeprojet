@@ -176,54 +176,61 @@ function enableDrag(symbol) {
 
 // Fonction pour télécharger les cartes en PDF
 async function downloadCardsAsPDF() {
-  try {
-    const cardContainer = document.getElementById("cardContainer");
-    const cards = cardContainer.querySelectorAll(".card");
+    try {
+        const cardContainer = document.getElementById("cardContainer");
+        const cards = cardContainer.querySelectorAll(".card");
 
-    if (cards.length === 0) {
-      alert("Aucune carte à télécharger. Veuillez d'abord générer les cartes.");
-      return;
+        if (cards.length === 0) {
+            alert("Aucune carte à télécharger. Veuillez d'abord générer les cartes.");
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF("portrait", "mm", "a4"); // Format A4 vertical
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+
+        const cardWidth = 85; // Largeur d'une carte en mm
+        const cardHeight = 85; // Hauteur d'une carte en mm
+        const margin = 10; // Marge générale
+
+        const cardsPerRow = Math.floor((pageWidth - margin * 2) / cardWidth); // Nb de cartes par ligne
+        const cardsPerCol = Math.floor((pageHeight - margin * 2 - 10) / cardHeight); // Nb de cartes par colonne
+        const cardsPerPage = cardsPerRow * cardsPerCol; // Nb total de cartes par page
+
+        let currentCardIndex = 0;
+
+        for (let i = 0; i < cards.length; i++) {
+            const canvas = await html2canvas(cards[i], { scale: 2 }); // Meilleure résolution
+            const imgData = canvas.toDataURL("image/png");
+
+            // Calcule la position sur la page
+            const row = Math.floor(currentCardIndex / cardsPerRow) % cardsPerCol;
+            const col = currentCardIndex % cardsPerRow;
+            const x = margin + col * cardWidth;
+            const y = margin + 10 + row * cardHeight; // Décalage de 10mm pour le titre
+
+            // Ajoute un titre uniquement au début de chaque page
+            if (currentCardIndex % cardsPerPage === 0) {
+                if (currentCardIndex > 0) pdf.addPage(); // Nouvelle page après la première
+                pdf.setFontSize(16);
+                pdf.text("Cartes Dobble Personnalisées", pageWidth / 2, 10, { align: "center" });
+            }
+
+            // Ajoute l'image de la carte
+            pdf.addImage(imgData, "PNG", x, y, cardWidth, cardHeight);
+            currentCardIndex++;
+        }
+
+        pdf.save("dobble_cards.pdf");
+        alert("Le PDF a été téléchargé avec succès !");
+    } catch (error) {
+        console.error("Erreur lors du téléchargement du PDF :", error);
+        alert("Une erreur est survenue lors du téléchargement du PDF. Veuillez réessayer.");
     }
-
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF("portrait", "mm", "a4");
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    const cardWidth = 85.53; // Taille d'une carte sur le PDF
-    const cardHeight = 85.53; // Taille d'une carte sur le PDF
-    const margin = 10;
-    const cardsPerRow = Math.floor((pageWidth - margin) / (cardWidth + margin));
-    const cardsPerCol = Math.floor((pageHeight - margin) / (cardHeight + margin));
-    const cardsPerPage = cardsPerRow * cardsPerCol;
-
-    let currentCardIndex = 0;
-
-    for (let i = 0; i < cards.length; i++) {
-      const canvas = await html2canvas(cards[i], { scale: 2 });
-      const imgData = canvas.toDataURL("image/png");
-
-      const row = Math.floor(currentCardIndex / cardsPerRow) % cardsPerCol;
-      const col = currentCardIndex % cardsPerRow;
-      const x = margin + col * (cardWidth + margin);
-      const y = margin + row * (cardHeight + margin);
-
-      pdf.addImage(imgData, "PNG", x, y, cardWidth, cardHeight);
-      currentCardIndex++;
-
-      if (currentCardIndex % cardsPerPage === 0 && currentCardIndex < cards.length) {
-        pdf.addPage();
-      }
-    }
-
-    pdf.save("dobble_cards.pdf");
-    alert("Le PDF a été téléchargé avec succès !");
-  } catch (error) {
-    console.error("Erreur lors du téléchargement du PDF :", error);
-    alert("Une erreur est survenue lors du téléchargement du PDF. Veuillez réessayer.");
-  }
 }
 
-// Fonction pour remplir le tableau des émojis personnalisables
+
 // Fonction pour remplir le tableau des émojis personnalisables
 function populateEmojiTable() {
     const tableBody = document.getElementById("emojiTable").querySelector("tbody");
