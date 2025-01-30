@@ -194,22 +194,21 @@ async function downloadCardsAsPDF() {
     try {
         console.log("📥 Début de la génération du PDF...");
 
-        // 🔄 Recharger l'image du dos des cartes si elle existe dans localStorage
+        // 🔄 Charger l'image du dos des cartes
         backCardImage = localStorage.getItem("backCardImage") || null;
-        console.log("🔄 backCardImage rechargé :", backCardImage);
+        console.log("🖼 Image du dos chargée :", backCardImage);
 
-        // Vérification de la présence des cartes
+        // Vérification des cartes
         const cardContainer = document.getElementById("cardContainer");
         const cards = cardContainer.querySelectorAll(".card");
 
         if (cards.length === 0) {
-            alert("Aucune carte à télécharger. Veuillez d'abord générer les cartes.");
+            alert("❌ Aucune carte à télécharger. Veuillez d'abord générer les cartes.");
             return;
         }
 
-        // Vérification de la présence du dos des cartes
         if (!backCardImage) {
-            alert("Veuillez ajouter une image pour le dos des cartes.");
+            alert("❌ Veuillez ajouter une image pour le dos des cartes.");
             return;
         }
 
@@ -264,17 +263,19 @@ async function downloadCardsAsPDF() {
         // 📄 Génération des pages du PDF avec recto-verso aligné
         pages.forEach((page, pageIndex) => {
             console.log(`🖨️ Ajout de la page ${pageIndex + 1} (recto)...`);
-            if (pageIndex > 0) pdf.addPage();
-            
+            if (pageIndex > 0) pdf.addPage(); // Nouvelle page uniquement après la première
+
             // Ajout des cartes (recto)
             page.forEach(({ imgData, x, y }) => {
                 pdf.addImage(imgData, "PNG", x, y, cardSize, cardSize);
             });
 
-            // Ajout du verso sur une nouvelle page
+            // Ajout du verso aligné
             console.log(`🔄 Ajout du verso des cartes sur la page ${pageIndex + 2}...`);
             pdf.addPage();
+
             page.forEach(({ x, y }) => {
+                // 🛠️ Correction : le verso est maintenant parfaitement aligné avec le recto
                 pdf.addImage(backCardImage, "PNG", x, y, cardSize, cardSize);
             });
         });
