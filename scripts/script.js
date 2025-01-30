@@ -259,23 +259,25 @@ function populateEmojiTable() {
         uploadButton.appendChild(fileInput);
         inputCell.appendChild(uploadButton);
 
-        uploadButton.addEventListener("click", () => { // Trigger file input click on label click
-            fileInput.click();
-        });
+        uploadButton.addEventListener("click", (event) => {
+    event.preventDefault(); // Évite un comportement inattendu
+    fileInput.click();
+}, { once: true }); // S'assure que l'événement ne se déclenche qu'une seule fois
 
-        fileInput.addEventListener("change", (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    emojiList[index] = e.target.result;
-                    saveEmojiList();
-                    populateEmojiTable();
-                    generateCards();
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+
+  fileInput.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            emojiList[index] = e.target.result;
+            saveEmojiList();
+            populateEmojiTable();  // Mise à jour immédiate de l'affichage
+            generateCards();        // Re-générer les cartes pour inclure le nouvel emoji
+        };
+        reader.readAsDataURL(file);
+    }
+}, { once: true }); // Empêche la boîte de dialogue de s'ouvrir deux fois
 
         row.appendChild(inputCell);
 
