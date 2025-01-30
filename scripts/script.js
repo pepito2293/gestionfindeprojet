@@ -192,7 +192,7 @@ async function downloadCardsAsPDF() {
         const pageHeight = pdf.internal.pageSize.getHeight();
         const margin = 10; // Marge extérieure
 
-        const cardSize = 85; // Taille de la carte en mm
+        const cardSize = 85.53; // Taille exacte de la carte en mm
         const spaceBetween = 5; // Espacement entre les cartes
         const maxCardsPerRow = 2; // Nombre maximum de cartes par ligne
         const maxCardsPerCol = 3; // Nombre maximum de cartes par colonne
@@ -204,7 +204,7 @@ async function downloadCardsAsPDF() {
 
         // Position de départ pour centrer les cartes
         const startX = (pageWidth - totalWidth) / 2;
-        const startY = (pageHeight - totalHeight) / 2 + 10; // Décalage pour le titre
+        const startY = (pageHeight - totalHeight) / 2;
 
         let currentCardIndex = 0;
 
@@ -218,11 +218,9 @@ async function downloadCardsAsPDF() {
             const x = startX + col * (cardSize + spaceBetween);
             const y = startY + row * (cardSize + spaceBetween);
 
-            // Ajoute un titre uniquement au début de chaque page
-            if (currentCardIndex % totalCardsPerPage === 0) {
-                if (currentCardIndex > 0) pdf.addPage();
-                pdf.setFontSize(16);
-                pdf.text("Cartes Dobble Personnalisées", pageWidth / 2, 10, { align: "center" });
+            // Ajoute une nouvelle page si nécessaire
+            if (currentCardIndex % totalCardsPerPage === 0 && currentCardIndex > 0) {
+                pdf.addPage();
             }
 
             // Ajoute l'image de la carte
@@ -237,6 +235,7 @@ async function downloadCardsAsPDF() {
         alert("Une erreur est survenue lors du téléchargement du PDF. Veuillez réessayer.");
     }
 }
+
 
 // Fonction pour remplir le tableau des émojis personnalisables
 function populateEmojiTable() {
