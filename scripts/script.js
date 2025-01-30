@@ -190,19 +190,18 @@ async function downloadCardsAsPDF() {
 
         const pageWidth = pdf.internal.pageSize.getWidth();
         const pageHeight = pdf.internal.pageSize.getHeight();
-        const margin = 10; // Marge extérieure
 
         const cardSize = 85.53; // Taille exacte de la carte en mm
-        const spaceBetween = 5; // Espacement entre les cartes
-        const maxCardsPerRow = 2; // Nombre maximum de cartes par ligne
-        const maxCardsPerCol = 3; // Nombre maximum de cartes par colonne
+        const spaceBetween = 5; // Espacement précis entre les cartes
+        const maxCardsPerRow = 2; // 2 cartes par ligne
+        const maxCardsPerCol = 3; // 3 cartes par colonne
         const totalCardsPerPage = maxCardsPerRow * maxCardsPerCol;
 
-        // Calcul de l'espace réellement utilisé
+        // Calcul de la disposition exacte sur la page A4
         const totalWidth = maxCardsPerRow * cardSize + (maxCardsPerRow - 1) * spaceBetween;
         const totalHeight = maxCardsPerCol * cardSize + (maxCardsPerCol - 1) * spaceBetween;
 
-        // Position de départ pour centrer les cartes
+        // Coordonnées pour centrer parfaitement les cartes sur la page
         const startX = (pageWidth - totalWidth) / 2;
         const startY = (pageHeight - totalHeight) / 2;
 
@@ -212,18 +211,18 @@ async function downloadCardsAsPDF() {
             const canvas = await html2canvas(cards[i], { scale: 2 });
             const imgData = canvas.toDataURL("image/png");
 
-            // Calcul des positions pour centrer les cartes
+            // Calcul des positions pour un alignement exact
             const row = Math.floor(currentCardIndex / maxCardsPerRow) % maxCardsPerCol;
             const col = currentCardIndex % maxCardsPerRow;
             const x = startX + col * (cardSize + spaceBetween);
             const y = startY + row * (cardSize + spaceBetween);
 
-            // Ajoute une nouvelle page si nécessaire
+            // Ajoute une nouvelle page lorsque nécessaire
             if (currentCardIndex % totalCardsPerPage === 0 && currentCardIndex > 0) {
                 pdf.addPage();
             }
 
-            // Ajoute l'image de la carte
+            // Ajoute l'image de la carte au bon emplacement
             pdf.addImage(imgData, "PNG", x, y, cardSize, cardSize);
             currentCardIndex++;
         }
@@ -235,7 +234,6 @@ async function downloadCardsAsPDF() {
         alert("Une erreur est survenue lors du téléchargement du PDF. Veuillez réessayer.");
     }
 }
-
 
 // Fonction pour remplir le tableau des émojis personnalisables
 function populateEmojiTable() {
