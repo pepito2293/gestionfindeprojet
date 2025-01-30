@@ -356,3 +356,13 @@ async function exportCardsAsZip() {
     alert("Les 55 cartes ont été téléchargées en tant que fichier ZIP !");
   });
 }
+
+// Plugin tout réinitialiser
+document.getElementById("resetAll").addEventListener("click", () => {
+    if (confirm("Voulez-vous vraiment réinitialiser tous les émojis ?")) {
+        emojiList = [...defaultEmojis]; // Remet tous les émojis par défaut
+        saveEmojiList();  // Sauvegarde la nouvelle liste dans localStorage
+        populateEmojiTable();  // Met à jour le tableau
+        generateCards();  // Re-génère les cartes Dobble
+    }
+});
