@@ -447,7 +447,6 @@ window.addEventListener("load", () => {
 
 
 //Ajout d'un coup:
-
 document.getElementById("multiFileUpload").addEventListener("change", async (event) => {
     const files = event.target.files;
 
@@ -483,6 +482,11 @@ document.getElementById("multiFileUpload").addEventListener("change", async (eve
                 alert(`✅ ${files.length} image(s) ont été importées avec succès !`);
             }
         })(i);
+
+        reader.readAsDataURL(file);
+    }
+});
+
 
         reader.readAsDataURL(file);
     }
