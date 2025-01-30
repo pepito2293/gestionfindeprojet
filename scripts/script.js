@@ -1,4 +1,18 @@
+let backCardImage = null; // Stocke l'image du dos des cartes
 
+document.getElementById("backCardUpload").addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            backCardImage = e.target.result; // Stocke l'image en base64
+            localStorage.setItem("backCardImage", backCardImage); // Sauvegarde dans le localStorage
+            document.getElementById("backCardPreview").src = backCardImage;
+            document.getElementById("backCardPreview").style.display = "block";
+        };
+        reader.readAsDataURL(file);
+    }
+});
 // Liste des émojis par défaut
 const defaultEmojis = [
   "🍓", "🍕", "🍔", "🌵", "🐱", "🐟", "🎸", "🎨", "📱", "🚗",
@@ -393,21 +407,7 @@ document.getElementById("resetAll").addEventListener("click", () => {
 });
 
 
-let backCardImage = null; // Stocke l'image du dos des cartes
 
-document.getElementById("backCardUpload").addEventListener("change", (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            backCardImage = e.target.result; // Stocke l'image en base64
-            localStorage.setItem("backCardImage", backCardImage); // Sauvegarde dans le localStorage
-            document.getElementById("backCardPreview").src = backCardImage;
-            document.getElementById("backCardPreview").style.display = "block";
-        };
-        reader.readAsDataURL(file);
-    }
-});
 
 // Charger l'image du dos de carte au démarrage si elle est stockée
 window.addEventListener("load", () => {
