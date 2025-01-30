@@ -191,6 +191,7 @@ document.getElementById("backCardUpload").addEventListener("change", (event) => 
 });
 // Fonction pour télécharger les cartes en PDF
 async function downloadCardsAsPDF() {
+  console.log("📥 Chargement de backCardImage :", localStorage.getItem("backCardImage"));
     try {
         const cardContainer = document.getElementById("cardContainer");
         const cards = cardContainer.querySelectorAll(".card");
