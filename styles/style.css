@@ -291,3 +291,30 @@ footer p {
     background-color: #e6c200; /* Jaune foncé */
     transform: scale(1.05); /* Légère animation */
 }
+
+/* Section toute réinitialisation
+/* Conteneur du bouton "Tout réinitialiser" */
+.reset-all-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+}
+
+/* Style du bouton "Tout réinitialiser" */
+#resetAll {
+    padding: 10px 20px;
+    background-color: #ff5555; /* Rouge */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+/* Effet au survol */
+#resetAll:hover {
+    background-color: #cc0000; /* Rouge plus foncé */
+    transform: scale(1.05);
+}
