@@ -264,3 +264,30 @@ footer p {
 #menu-toggle:checked + .menu-icon + .menu-items {
     display: block;
 }
+
+/* Cache le champ input[type="file"] */
+#emojiTable input[type="file"] {
+    display: none;
+}
+
+/* Style du label qui remplace le bouton "Choisir un fichier" */
+#emojiTable label {
+    padding: 10px 20px;
+    background-color: #ffd700; /* Fond jaune */
+    color: #000; /* Texte noir */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+/* Effet au survol */
+#emojiTable label:hover {
+    background-color: #e6c200; /* Jaune foncé */
+    transform: scale(1.05); /* Légère animation */
+}
