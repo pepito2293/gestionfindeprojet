@@ -187,38 +187,46 @@ async function downloadCardsAsPDF() {
 
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF("portrait", "mm", "a4"); // Format A4 vertical
+
         const pageWidth = pdf.internal.pageSize.getWidth();
         const pageHeight = pdf.internal.pageSize.getHeight();
+        const margin = 10; // Marge extérieure
 
-        const cardWidth = 85; // Largeur d'une carte en mm
-        const cardHeight = 85; // Hauteur d'une carte en mm
-        const margin = 10; // Marge générale
+        const cardSize = 85; // Taille de la carte en mm
+        const spaceBetween = 5; // Espacement entre les cartes
+        const maxCardsPerRow = 2; // Nombre maximum de cartes par ligne
+        const maxCardsPerCol = 3; // Nombre maximum de cartes par colonne
+        const totalCardsPerPage = maxCardsPerRow * maxCardsPerCol;
 
-        const cardsPerRow = Math.floor((pageWidth - margin * 2) / cardWidth); // Nb de cartes par ligne
-        const cardsPerCol = Math.floor((pageHeight - margin * 2 - 10) / cardHeight); // Nb de cartes par colonne
-        const cardsPerPage = cardsPerRow * cardsPerCol; // Nb total de cartes par page
+        // Calcul de l'espace réellement utilisé
+        const totalWidth = maxCardsPerRow * cardSize + (maxCardsPerRow - 1) * spaceBetween;
+        const totalHeight = maxCardsPerCol * cardSize + (maxCardsPerCol - 1) * spaceBetween;
+
+        // Position de départ pour centrer les cartes
+        const startX = (pageWidth - totalWidth) / 2;
+        const startY = (pageHeight - totalHeight) / 2 + 10; // Décalage pour le titre
 
         let currentCardIndex = 0;
 
         for (let i = 0; i < cards.length; i++) {
-            const canvas = await html2canvas(cards[i], { scale: 2 }); // Meilleure résolution
+            const canvas = await html2canvas(cards[i], { scale: 2 });
             const imgData = canvas.toDataURL("image/png");
 
-            // Calcule la position sur la page
-            const row = Math.floor(currentCardIndex / cardsPerRow) % cardsPerCol;
-            const col = currentCardIndex % cardsPerRow;
-            const x = margin + col * cardWidth;
-            const y = margin + 10 + row * cardHeight; // Décalage de 10mm pour le titre
+            // Calcul des positions pour centrer les cartes
+            const row = Math.floor(currentCardIndex / maxCardsPerRow) % maxCardsPerCol;
+            const col = currentCardIndex % maxCardsPerRow;
+            const x = startX + col * (cardSize + spaceBetween);
+            const y = startY + row * (cardSize + spaceBetween);
 
             // Ajoute un titre uniquement au début de chaque page
-            if (currentCardIndex % cardsPerPage === 0) {
-                if (currentCardIndex > 0) pdf.addPage(); // Nouvelle page après la première
+            if (currentCardIndex % totalCardsPerPage === 0) {
+                if (currentCardIndex > 0) pdf.addPage();
                 pdf.setFontSize(16);
                 pdf.text("Cartes Dobble Personnalisées", pageWidth / 2, 10, { align: "center" });
             }
 
             // Ajoute l'image de la carte
-            pdf.addImage(imgData, "PNG", x, y, cardWidth, cardHeight);
+            pdf.addImage(imgData, "PNG", x, y, cardSize, cardSize);
             currentCardIndex++;
         }
 
